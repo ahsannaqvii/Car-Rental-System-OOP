@@ -1,0 +1,20 @@
+namespace Ui {
+class UserPaymentOption;
+}
+
+class UserPaymentOption : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit UserPaymentOption(QWidget *parent = nullptr);
+    ~UserPaymentOption();
+
+public slots:
+    void on_pushButton_Cash_clicked();
+
+    void on_pushButton_Wallet_clicked();
+
+private:
+    Ui::UserPaymentOption *ui;
+};

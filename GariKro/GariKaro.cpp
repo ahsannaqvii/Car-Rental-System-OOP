@@ -86,7 +86,7 @@ void PrintTitle(){                                                              
         //Calculating Waiting Charges                                                   
         Waiting_Charges = Waiting_Charges * Waiting_Time;
         //Calculating Fare
-        Promo_Discount = Promo_Discount / 100;
+        Promo_Discount = Promo_Discount / 100; 
         if (RideOption != 3){
             Fare = (Distance * RatePer_Kilometer) + Waiting_Charges;
             Promo_Discount = Fare * Promo_Discount;
@@ -517,8 +517,7 @@ void PrintTitle(){                                                              
 		cout << "\n\nCongratulation! Your Transaction Has Been Made." << endl;
 		
 	};
-	
-	 void User :: Notifications(){
+	void User :: Notifications(){
 		string Promo[5];
 		string PromoCode;
 		int i=0 , temp = 0;
@@ -555,7 +554,186 @@ void PrintTitle(){                                                              
 			cout << "\n\n\t\tNo New Notifications." << endl;
 		}	
 	};
-	 Ride :: Ride(){
+	//User changing Info Details.
+	void User :: changePhone(){
+		system("cls");
+		string tempUsername;
+		string currentPhone = Phone;
+		fstream fin("SignupFile.txt",ios::in);
+		fstream fout("temp.txt",ios::out);
+		if(fin.is_open()){
+			while(fin>>FirstName>>LastName>>tempUsername>>Password>>Phone>>Email>>Wallet>>Rating){
+				if((currentPhone == Phone) && (Username == tempUsername)){
+					cout<<"\nYour Current Phone Number : "<<Phone;
+					cout << "\n\nEnter new Phone Number : ";
+					cin >> Phone;
+				}
+				fout << FirstName << " " << LastName << " " << Username << " " << Password << " "<< Phone << " " 
+				<< Email << " " << Wallet << " " << Rating << endl;
+			}
+		}
+		fin.close();
+		fout.close();
+		cout<<endl<<endl<<"Phone Number Changed!\n"<<endl;
+		system("pause");
+		remove("SignupFile.txt");
+		rename("temp.txt","SignupFile.txt");
+	};
+	void User :: changeEmail(){
+		system("cls");
+		string currentEmail = Email;
+		string tempUsername;
+		fstream fin("SignupFile.txt",ios::in);
+		fstream fout("temp.txt",ios::out);	
+		if(fin.is_open()){
+			while(fin >> FirstName >> LastName >> tempUsername >> Password >> Phone >> Email >> Wallet >> Rating){
+				if((currentEmail == Email) && (Username == tempUsername)){
+					cout<<"Your Current Email : "<<Email;
+					cout << endl << endl << "Enter new Email : ";
+					cin >> Email;
+				}
+				fout << FirstName << " " << LastName << " " << tempUsername << " " << Password << " "<< Phone << " " 
+				<< Email << " " << Wallet << " " << Rating << endl;
+			}
+		}
+		fin.close();
+		fout.close();
+		cout<<endl<<endl<<"Email Changed!\n"<<endl;
+		system("cls");
+		remove("SignupFile.txt");
+		rename("temp.txt","SignupFile.txt");
+	};
+	void User :: checkPassword(){
+		string previousPassword;
+		string currentPhone;
+		int option=0;
+		system("cls");
+		cout<<"Change Password"<<endl<<"---------------";
+		cout<<endl<<endl<<"Enter Previous Password : ";
+		cin>>previousPassword;
+		if(previousPassword == Password){
+			changePassword();
+		}
+		else{
+			cout<<endl<<"Password Incorrect!";
+			while(1){
+				cout<<endl<<"1. Forgot Password"<<endl<<"2. ReEnter Password"<<endl<<"3. Exit";
+				cin>>option;
+				if(option == 1) {
+					cout<<"Forgot Password"<<endl<<"---------------";
+					cout<<endl<<endl<<"Enter Phone Number : ";
+					cin>>currentPhone;
+					
+					if(currentPhone == Phone) {
+						changePassword();
+						break;
+					}
+					else {
+						cout<<endl<<"Phone Number Incorrent!";
+					}
+				}
+				else if(option == 2) {
+					checkPassword();
+					break;
+				}
+				else if(option == 3) {
+					break;
+				}
+			}
+		}
+	};
+	void User :: changePassword(){
+		string newPassword1;
+		string newPassword2;
+		string currentUsername;
+		currentUsername = Username;
+		while(1){
+			cout << "\nEnter New Password : ";
+			cin >> newPassword1;
+			cout << "\nConfirm Password : ";
+			cin >> newPassword2;
+			if(newPassword1 == newPassword2){
+				fstream fin("SignupFile.txt",ios::in);
+				fstream fout("temp.txt",ios::out);
+				if(fin.is_open()){
+					while(fin >> FirstName >> LastName >> Username >> Password >> Phone >> Email >> Wallet >> Rating){
+						if(Username == currentUsername) {
+							Password = newPassword2;
+						}
+						fout << FirstName <<" "<< LastName<<" " << Username <<" "<< Password <<" "<< Phone <<" "
+						<< Email <<" "<< Wallet <<" "<< Rating<<endl;
+					}
+				}
+				fin.close();
+				fout.close();
+				remove("SignupFile.txt");
+				rename("temp.txt","SignupFile.txt");
+				cout << "\nPassword Changed!";
+				break;
+			}
+			else{
+				cout << "\nPassword didnot Match!";
+			}
+		}
+	};
+	void User :: ViewDetails(){
+		cout << " \t\t\t\tUSER DETAILS "<<endl<<endl;
+		if (entered_username == Username){
+            if (entered_password == Password){
+            	cout<<"\t\t-------------------------------------------"<<endl;
+                cout << "\t\tUsername : " << Username <<endl << endl;
+                cout<<"\t\t-------------------------------------------"<<endl;
+                cout << "\t\tFirstName : " << FirstName <<endl << endl;
+                cout<<"\t\t-------------------------------------------"<<endl;
+                cout << "\t\tLastName : " << LastName <<endl << endl;
+                cout<<"\t\t-------------------------------------------"<<endl;
+                cout << "\t\tPassword : " << Password <<endl << endl;
+                cout<<"\t\t-------------------------------------------"<<endl;
+                cout << "\t\tPhone : " << Phone <<endl << endl;
+                cout<<"\t\t-------------------------------------------"<<endl;
+                cout << "\t\tEmail : " << Email <<endl << endl;
+                cout<<"\t\t-------------------------------------------"<<endl;
+                cout << "\t\tWallet : " << Wallet <<endl << endl;
+                cout<<"\t\t-------------------------------------------"<<endl;
+                cout << "\t\tRating : " << Rating <<endl << endl;
+                cout<<"\t\t-------------------------------------------"<<endl;
+                
+            }
+        }   
+	};
+	void User ::TransactionData(){
+		int tempID,amountDeposited,flag;
+		string tempUser,tempPassword;
+		cout<<"\t\t\tUSER TRANSACTION HISTORY"<<endl<<endl;
+		cout<<"Enter your Transaction ID"<<endl;
+		cin>>tempID;
+		ifstream fin("Transactions.txt");
+		if (fin.is_open()){
+			while(fin >> tempUser  >>  tempPassword >>  amountDeposited  >>  Booking_Date >>  Booking_Month >>Booking_Year  >> TransactionID){
+				if((tempID==TransactionID) && (tempUser==Username) && (tempPassword==Password) ){
+				flag++;
+				cout<<"\t\t-------------------------------------------"<<endl;
+				cout <<"\t\tUsername : " << Username <<endl;
+				cout<<"\t\t-------------------------------------------"<<endl;
+				cout <<"\t\tPassword : " << Password <<endl;
+				cout<<"\t\t-------------------------------------------"<<endl;
+				cout <<"\t\tAmount Deposited : " << amountDeposited <<endl;
+				cout<<"\t\t-------------------------------------------"<<endl;
+				cout <<"\t\tTransaction Time : " << Booking_Date<<"/"<< Booking_Month << "/"<<Booking_Year<<endl;
+				cout<<"\t\t-------------------------------------------"<<endl;
+				cout <<"\t\tTransaction ID : "<<TransactionID<<endl; 
+				cout<<"\t\t-------------------------------------------"<<endl<<endl;
+				}
+			
+			}
+			if(flag==0){
+				cout<<"No Transactions"<<endl;
+			}
+		}
+	};
+																			//RIDE CLASS
+																			
+ 	Ride :: Ride(){
 		Wallet = 0;
 		Fare = 0;
 		Distance = 0;
@@ -808,6 +986,9 @@ void PrintTitle(){                                                              
         }	
 	};
 	int Ride :: Check_PromoCode(int Type){
+		string line;
+		string word;
+		string Array[4];
 		string PromoCode;
 		int Option , flag = 0;
 		float Discount;
@@ -819,25 +1000,41 @@ void PrintTitle(){                                                              
 			case 1:{
 				cout << "\nEnter Promo Code: ";
 				cin >> entered_Promo;
-				fstream fin("PromoCodes.txt",ios::in);
-				if(fin.is_open()){
-					while(fin >> PromoCode >> Discount >> Promo_Validity >> Promo_Type){
+				fstream fin("PromoCodes.csv",ios::in);
+				if (fin.is_open()){
+					while (!fin.eof()){
+						getline(fin,line);
+						stringstream s(line);
+						int i=0;
+						while (getline(s,word,',')){
+							Array[i] = word;
+							i++;
+						} 
+						PromoCode = Array[0];
+						Discount = stoi (Array[1]);
+						Promo_Validity = stoi (Array[2]);
+						Promo_Type = Array[3];
 						if (entered_Promo == PromoCode){
-							cout << "\nPromo Code Added.\n" << endl;
-							flag++;
-							break;
+						cout << "\nPromo Code Added.\n" << endl;
+						flag++;
+						break;
 						}
 					}
-					if (flag == 0){
+				}
+				if (flag == 0){
 						cout << "\nSorry Invalid PromoCode." << endl;
-					}
 				}
 				fin.close();
 				if ((Type == 1) && (Promo_Type == "NAC")){
-					Promo_Discount = Discount;
+					Promo_Discount = Discount +0.00;
+					cout << "Discount "<<Promo_Discount<<endl;
+					system("pause");
 				}
 				else if ((Type == 2) && (Promo_Type == "AC")){
+				
 					Promo_Discount = Discount;
+					cout << "Discount "<<Promo_Discount<<endl;
+					system("pause");
 				}
 				else if ((Type == 3) && (Promo_Type == "Sharing")){
 					Promo_Discount = Discount;
@@ -976,93 +1173,7 @@ void PrintTitle(){                                                              
             Ending_Minute = Ending_Minute - 60;
         }
 	} ;	
-	void Ride :: checkPassword(){
-		string previousPassword;
-		string currentPhone;
-		int option=0;
-		system("cls");
-		cout<<"Change Password"<<endl<<"---------------";
-		cout<<endl<<endl<<"Enter Previous Password : ";
-		cin>>previousPassword;
-		if(previousPassword == Password){
-			changePassword();
-		}
-		else{
-			cout<<endl<<"Password Incorrect!";
-			while(1){
-				cout<<endl<<"1. Forgot Password"<<endl<<"2. ReEnter Password"<<endl<<"3. Exit";
-				cin>>option;
-				if(option == 1) {
-					cout<<"Forgot Password"<<endl<<"---------------";
-					cout<<endl<<endl<<"Enter Phone Number : ";
-					cin>>currentPhone;
-					
-					if(currentPhone == Phone) {
-						changePassword();
-						break;
-					}
-					else {
-						cout<<endl<<"Phone Number Incorrent!";
-					}
-				}
-				else if(option == 2) {
-					checkPassword();
-					break;
-				}
-				else if(option == 3) {
-					break;
-				}
-			}
-		}
-	};
-	void Ride :: changePhone(){
-		system("cls");
-		string tempUsername;
-		string currentPhone = Phone;
-		fstream fin("SignupFile.txt",ios::in);
-		fstream fout("temp.txt",ios::out);
-		if(fin.is_open()){
-			while(fin>>FirstName>>LastName>>tempUsername>>Password>>Phone>>Email>>Wallet>>Rating){
-				if((currentPhone == Phone) && (Username == tempUsername)){
-					cout<<"\nYour Current Phone Number : "<<Phone;
-					cout << "\n\nEnter new Phone Number : ";
-					cin >> Phone;
-				}
-				fout << FirstName << " " << LastName << " " << Username << " " << Password << " "<< Phone << " " 
-				<< Email << " " << Wallet << " " << Rating << endl;
-			}
-		}
-		fin.close();
-		fout.close();
-		cout<<endl<<endl<<"Phone Number Changed!\n"<<endl;
-		system("pause");
-		remove("SignupFile.txt");
-		rename("temp.txt","SignupFile.txt");
-	};
-	void Ride :: changeEmail(){
-		system("cls");
-		string currentEmail = Email;
-		string tempUsername;
-		fstream fin("SignupFile.txt",ios::in);
-		fstream fout("temp.txt",ios::out);	
-		if(fin.is_open()){
-			while(fin >> FirstName >> LastName >> tempUsername >> Password >> Phone >> Email >> Wallet >> Rating){
-				if((currentEmail == Email) && (Username == tempUsername)){
-					cout<<"Your Current Email : "<<Email;
-					cout << endl << endl << "Enter new Email : ";
-					cin >> Email;
-				}
-				fout << FirstName << " " << LastName << " " << tempUsername << " " << Password << " "<< Phone << " " 
-				<< Email << " " << Wallet << " " << Rating << endl;
-			}
-		}
-		fin.close();
-		fout.close();
-		cout<<endl<<endl<<"Email Changed!\n"<<endl;
-		system("cls");
-		remove("SignupFile.txt");
-		rename("temp.txt","SignupFile.txt");
-	};
+	
 	void Ride :: Payment_Method(){
 		try {
 			cout << "\nChoose any of the following Payment Method: ";
@@ -1122,96 +1233,6 @@ void PrintTitle(){                                                              
 			rename ("temp.txt","SignupFile.txt");
 		}
 	};
-	void Ride :: changePassword(){
-		string newPassword1;
-		string newPassword2;
-		string currentUsername;
-		currentUsername = Username;
-		while(1){
-			cout << "\nEnter New Password : ";
-			cin >> newPassword1;
-			cout << "\nConfirm Password : ";
-			cin >> newPassword2;
-			if(newPassword1 == newPassword2){
-				fstream fin("SignupFile.txt",ios::in);
-				fstream fout("temp.txt",ios::out);
-				if(fin.is_open()){
-					while(fin >> FirstName >> LastName >> Username >> Password >> Phone >> Email >> Wallet >> Rating){
-						if(Username == currentUsername) {
-							Password = newPassword2;
-						}
-						fout << FirstName <<" "<< LastName<<" " << Username <<" "<< Password <<" "<< Phone <<" "
-						<< Email <<" "<< Wallet <<" "<< Rating<<endl;
-					}
-				}
-				fin.close();
-				fout.close();
-				remove("SignupFile.txt");
-				rename("temp.txt","SignupFile.txt");
-				cout << "\nPassword Changed!";
-				break;
-			}
-			else{
-				cout << "\nPassword didnot Match!";
-			}
-		}
-	};
-	void Ride :: ViewDetails(){
-		cout << " \t\t\t\tUSER DETAILS "<<endl<<endl;
-		if (entered_username == Username){
-            if (entered_password == Password){
-            	cout<<"\t\t-------------------------------------------"<<endl;
-                cout << "\t\tUsername : " << Username <<endl << endl;
-                cout<<"\t\t-------------------------------------------"<<endl;
-                cout << "\t\tFirstName : " << FirstName <<endl << endl;
-                cout<<"\t\t-------------------------------------------"<<endl;
-                cout << "\t\tLastName : " << LastName <<endl << endl;
-                cout<<"\t\t-------------------------------------------"<<endl;
-                cout << "\t\tPassword : " << Password <<endl << endl;
-                cout<<"\t\t-------------------------------------------"<<endl;
-                cout << "\t\tPhone : " << Phone <<endl << endl;
-                cout<<"\t\t-------------------------------------------"<<endl;
-                cout << "\t\tEmail : " << Email <<endl << endl;
-                cout<<"\t\t-------------------------------------------"<<endl;
-                cout << "\t\tWallet : " << Wallet <<endl << endl;
-                cout<<"\t\t-------------------------------------------"<<endl;
-                cout << "\t\tRating : " << Rating <<endl << endl;
-                cout<<"\t\t-------------------------------------------"<<endl;
-                
-            }
-        }   
-	};
-	void Ride ::TransactionData(){
-		int tempID,amountDeposited,flag;
-		string tempUser,tempPassword;
-		cout<<"\t\t\tUSER TRANSACTION HISTORY"<<endl<<endl;
-		cout<<"Enter your Transaction ID"<<endl;
-		cin>>tempID;
-		ifstream fin("Transactions.txt");
-		if (fin.is_open()){
-			while(fin >> tempUser  >>  tempPassword >>  amountDeposited  >>  Booking_Date >>  Booking_Month >>Booking_Year  >> TransactionID){
-				if((tempID==TransactionID) && (tempUser==Username) && (tempPassword==Password) ){
-				flag++;
-				cout<<"\t\t-------------------------------------------"<<endl;
-				cout <<"\t\tUsername : " << Username <<endl;
-				cout<<"\t\t-------------------------------------------"<<endl;
-				cout <<"\t\tPassword : " << Password <<endl;
-				cout<<"\t\t-------------------------------------------"<<endl;
-				cout <<"\t\tAmount Deposited : " << amountDeposited <<endl;
-				cout<<"\t\t-------------------------------------------"<<endl;
-				cout <<"\t\tTransaction Time : " << Booking_Date<<"/"<< Booking_Month << "/"<<Booking_Year<<endl;
-				cout<<"\t\t-------------------------------------------"<<endl;
-				cout <<"\t\tTransaction ID : "<<TransactionID<<endl; 
-				cout<<"\t\t-------------------------------------------"<<endl<<endl;
-				}
-			
-			}
-			if(flag==0){
-				cout<<"No Transactions"<<endl;
-			}
-		}
-	};
-
 																		//Driver Class
 	
 	 Driver::Driver(){
@@ -1464,6 +1485,9 @@ void PrintTitle(){                                                              
 								else if(option == 2){
 									return 1;
 								}
+								else if(option!=1 && option!=2){
+									throw(5);
+								}
 							}
 							temp << temporary[0]<< " " << temporary[1] << " " << temporary[2] << " " << searchPickup << " " << searchDropoff 
 							<< endl;
@@ -1483,6 +1507,10 @@ void PrintTitle(){                                                              
 			remove("UserSearch.txt");
 			rename("temp.txt", "UserSearch.txt");
 			return 0;
+		}
+		catch(int a){
+			cout << "Please choose the above given options to select or decline a ride." << endl;
+			return 1;
 		}
 		catch(...){
 			cout << "\n\nSorry No Ride Available At The Moment." << endl;
@@ -1674,7 +1702,7 @@ void PrintTitle(){                                                              
 		int Cash_Back;
 		int Option;
 		srand (time(NULL));
-		Payment_Option = rand()%1;
+		Payment_Option = rand()%2;
 		Payment_Option++;
 		if (Payment_Option == 1){
 			for (int i=0 ; ; i++){
@@ -1691,7 +1719,6 @@ void PrintTitle(){                                                              
 					else if (Amount_Recieved > (Fare*0.8) && Amount_Recieved < Fare){
 						Cash_Back = Fare - Amount_Recieved;
 						Wallet += Cash_Back;
-//						cout << "\nReturn Amount: " << Cash_Back;
 						cout << "\nYou Have A Negative Balance Of: " << Cash_Back;
 						cout << "\nCongratulation! Your Ride Has Been Completed." << endl;
 						break;
@@ -1702,6 +1729,7 @@ void PrintTitle(){                                                              
 						cout << "\n1.Yes \n2.No" << endl;
 						cin >> Option;
 						if (Option == 1){
+							
 							Wallet += Cash_Back;
 							cout << "\nCongratulation! Your Ride Has Been Completed." << endl;
 							break;

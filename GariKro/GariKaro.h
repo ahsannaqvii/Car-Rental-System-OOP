@@ -5,7 +5,7 @@ protected:
 	string pickup_location , dropoff_location , Username;
 	string Email , Phone , FirstName , LastName , Password , PickUp , DropOff;
     float RatePer_Kilometer , Waiting_Charges , Extra_Charges;
-	float Distance , Promo_Discount , Rating;
+	float Distance  , Rating, Promo_Discount;
     int Waiting_Time , Starting_Hour , Starting_Minute;
 	int Ending_Hour , Ending_Minute , Expected_Time , Ride_time;
 	//Booking Details      
@@ -44,6 +44,13 @@ public:
     void Check_Balance();
     void Add_Balance();
 	void Notifications();
+	void checkPassword();
+	void changePhone();
+	void changeEmail();
+	void ViewDetails();
+	void TransactionData();
+private:
+	void changePassword();
 	
 };
 class Ride : public User {                                                                    //Details of ride
@@ -68,15 +75,8 @@ public:
 	void ArrivalMessage() 	;			                                	//Displays Arrival Message to System and User	
     void StartingMessage();
     void DropOffMessage();							                       //Displays DropOff Message to System and User
-	void checkPassword();
-	void changePhone();
-	void changeEmail();
 	void Payment_Method();
 	void Payment();
-	void ViewDetails();
-	void TransactionData();
-private:
-	void changePassword();
 		
 };
 												

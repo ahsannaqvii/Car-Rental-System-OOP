@@ -5,14 +5,15 @@
 #include<conio.h>                                            
 #include<cctype>      
 #include<ctime>                                       
-#include<windows.h>                                                                                                                    		
+#include<windows.h> 
+#include <sstream>                                                                                                                   		
 #include "GariKaro.cpp"              	//Our Header File                                                                   	
                                                                              	
 
 using namespace std;
 
 void PrintTitle();                                                                               		//Global Function
-istream & operator >> (istream &in,  User &B1) { 
+istream & operator >> (istream &in,  User &B1){ 
 	cout<<endl;
 	cout << "\nUsername: ";
 	fflush(stdin);
@@ -284,6 +285,9 @@ int main(){
 								D.Payment();
 								D.rideDetails();
 								break;
+							}
+							else{
+								continue;
 							}
 						}
 						break;

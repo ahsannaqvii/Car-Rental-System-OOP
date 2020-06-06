@@ -1,4 +1,4 @@
-Ghafoor Elahi 03191949497 Toyota Corolla ADH-100 Bahadurabad Dhoraji Booked
+Ghafoor Elahi 03191949497 Toyota Corolla ADH-100 Bahadurabad Dhoraji Vacant
 Ibadullah Shiekh 03429497210 Suzuki Swift AWY-101 Saddar Korangi Vacant
 Ahmed Ghafoor 03149264913 Suzuki WagonR AXD-102 Gulshan Stadium Vacant
 Rehman Ullah 03361199482 Suzuki Every CX-9494 Bahadurabad Dhoraji Vacant
@@ -8,7 +8,7 @@ Ahmed Butt 03149756482 Toyota Vitz AOU-106 Cantt Bahria Vacant
 Ibad Azim 03111994119 Honda Civic AEY-335 Bahadurabad Dhoraji Vacant
 Asad Mirza 031114916191 Toyota Corolla AAD-107 FAST SMCHS Vacant
 Ghafoor Sheikh 0394461111 Suzuki Ciaz BBC-216 Defense Gulshan Vacant
-Ahmed Shakeel 03331324484 Suzuki Swift BBE-194 FAST Defense Booked
+Ahmed Shakeel 03331324484 Suzuki Swift BBE-194 FAST Defense Vacant
 Rehmat Shiekh 031114916192 Honda Civic AYE-916 FAST Korangi Vacant
 Ahsan Penwala 03131949431 Suzuki Cultus BBF-164 FAST Gulberg Vacant
 Ghafoor Azam 03131949432 Honda Accord AUD-494 University PECHS Vacant
