@@ -1,7 +1,7 @@
 #include "GariKaro.h"
 using namespace std;
 
-void PrintTitle(){                                                                                  //Global Function to print title
+void PrintTitle(){                                                                                  //Global Function
     int  len = 0;
 	char str1[] = {"******************GARIKARO!******************"};
    	//For Welcome
@@ -11,23 +11,21 @@ void PrintTitle(){                                                              
         Sleep(50);
     }
 }                                        
-	template <class V_Type>
+	template <class V_Type>																			//Template Function
 	void GariKro :: set_Locations(V_Type pickup_location , V_Type dropoff_location){
         this-> pickup_location = pickup_location;
         this-> dropoff_location = dropoff_location;
     };
 	void GariKro :: Fare_Calculation(){	
-        //Getting Distance
-        fstream File1("Location-Distances.txt", ios::in);
+        fstream File1("Location-Distances.txt", ios::in);											//Fetching Distance
         while(File1 >> PickUp >> DropOff >> Distance >> Expected_Time){
             if ((PickUp == pickup_location) && (DropOff == dropoff_location)){
                 break;
             }
         }
         File1.close(); 
-        //Getting charges from admin file
         string Type;
-        fstream File("Admin-Charges.txt", ios::in);
+        fstream File("Admin-Charges.txt", ios::in);													//Fetching Charges 
         switch(RideOption){
             case 1: {
                 if (File.is_open()){
@@ -75,24 +73,22 @@ void PrintTitle(){                                                              
                 } 
             }
         }
-        File.close();
-        //Calculating Ride Time     
-        if (Starting_Hour == Ending_Hour){
+        File.close();           
+        if (Starting_Hour == Ending_Hour){															//Calculating Ride Time  
             Ride_time = Ending_Minute - Starting_Minute ;   
         }
         else if (Ending_Hour > Starting_Hour){
             Ride_time = Ending_Minute - Starting_Minute + 60;
-        }          
-        //Calculating Waiting Charges                                                   
-        Waiting_Charges = Waiting_Charges * Waiting_Time;
-        //Calculating Fare
-        Promo_Discount = Promo_Discount / 100; 
-        if (RideOption != 3){
+        }                                                          
+        Waiting_Charges = Waiting_Charges * Waiting_Time;        									//Calculating Waiting Charges
+        
+        Promo_Discount = Promo_Discount / 100; 														//Dividing to convert from percentage
+        if (RideOption != 3){																		//Calculating Fare
             Fare = (Distance * RatePer_Kilometer) + Waiting_Charges;
             Promo_Discount = Fare * Promo_Discount;
             Fare = Fare - Promo_Discount;
         }
-        else if (RideOption == 3){
+        else if (RideOption == 3){																	//Calculating Fare
             float Discount;	
             Fare = (Distance * RatePer_Kilometer) + Waiting_Charges;
             Discount = Fare * 0.3;
@@ -100,12 +96,15 @@ void PrintTitle(){                                                              
             Fare = Fare - Discount;
             Fare = Fare - Promo_Discount;
         }
-        if (Ride_time > Expected_Time){
+        if (Ride_time > Expected_Time){																//Calculating Extra Charges
             float Extra_time = Ride_time - Expected_Time;
 			Fare += (Extra_time * Extra_Charges);
         }
+        if (Fare < Standard_Fare){																	//Standard Fare
+        	Fare = Standard_Fare;
+		}
     }
-    void GariKro :: rideDetails(){
+    void GariKro :: rideDetails(){																	//Used to keep records of all the rides
 		fstream fout("Ride-Records.txt" , ios::app);
     	if (fout.is_open()){
     		if (Ending_Minute > 9 && Starting_Minute > 9){
@@ -151,8 +150,8 @@ void PrintTitle(){                                                              
 			cout << "\t\tRide Starting Time: \t\t" << Starting_Hour << ":0" << Starting_Minute;
     		cout << "\n\t\tRide Ending Time: \t\t" << Ending_Hour << ":" << Ending_Minute;
 		}
-        cout << "\n\t\tRide Duration: \t\t\t" << Ride_time;
-        cout << "\n\t\tWaiting Duration: \t\t" << Waiting_Time;
+        cout << "\n\t\tRide Duration: \t\t\t" << Ride_time << "mins";
+        cout << "\n\t\tWaiting Duration: \t\t" << Waiting_Time << "mins";
         cout << "\n\t\tWaiting Charges: \t\t" << Waiting_Charges << "PKR";
         cout << "\n\t\tDistance covered: \t\t" << Distance << "km";
         cout << "\n\t\tPromo Code Discount: \t\t" << Promo_Discount;
@@ -161,17 +160,17 @@ void PrintTitle(){                                                              
         cout<<"\n\t\t-------------------------------------\n\n";
 	};
 
-     void User :: Login(){     																						//Login Function
+     void User :: Login(){     																		//USER CLASS											
 		int flag=0; 
 		for (int i=0 ; flag<1 ; i++){                         																 	                         																 	
-			cin>>*this;
+			cin>>*this;																				//Calling Operator Overloaded
 			ifstream fin("SignUpFile.txt");
 	    	if(fin.is_open()){
 	    		while(!fin.eof()){
 	    			fin >> FirstName >> LastName >> Username >> Password >> Phone >> Email >> Wallet >> Rating;
 	    			if (entered_username == Username){
 	                    if (entered_password == Password){
-		                    cout << "\nYou Have Successfully Logged In." << endl;
+		                    cout << "\nYou Have Successfully Logged In.\n" << endl;
 		                    flag++;
 		                    break;
 		                }
@@ -184,7 +183,7 @@ void PrintTitle(){                                                              
 	        fin.close();
 	    }
     };
-     void User :: SignUp(){                                                                        				//Signup function
+     void User :: SignUp(){                                                                        			
     	string tempUsername,tempPhone,tempEmail;
     	string tempFirstName , tempLastName;
     	string tempPassword;
@@ -198,7 +197,7 @@ void PrintTitle(){                                                              
         	ifstream fin1("SignupFile.txt");
         	while(fin1 >> tempFirstName >> tempLastName >> tempUsername >> tempPassword >> tempPhone >> tempEmail >> tempWallet 
 			>> tempRating ){
-	        	if(tempUsername==Username){
+	        	if(tempUsername==Username){															//Duplication of Username
 	        		flag++;
 	        		cout<<"Username already taken!"<<endl;
 	        		break;
@@ -224,7 +223,7 @@ void PrintTitle(){                                                              
 	       	cin >> Phone;
 	       	while(fin1 >> tempFirstName >> tempLastName >> tempUsername >> tempPassword >> tempPhone >> tempEmail >> 
 			   tempWallet >> tempRating){
-	        	if(Phone == tempPhone){
+	        	if(Phone == tempPhone){																//Duplication of Phone Number
 	        		flag++;
 	        		cout<<"\nPhone Number already taken!"<<endl;
 	        		break;
@@ -242,7 +241,7 @@ void PrintTitle(){                                                              
 				ifstream fin1("SignupFile.txt");
 				while(fin1 >> tempFirstName >> tempLastName >> tempUsername >> tempPassword >> tempPhone >> tempEmail >> 
 				tempWallet >> tempRating ){
-	        	if(Email == tempEmail){
+	        	if(Email == tempEmail){																//Duplication of Email ID
 	        		flag++;
 	        		cout<<"\nEmail already taken!"<<endl;
 	        		break;
@@ -254,7 +253,7 @@ void PrintTitle(){                                                              
 			flag=0;
 			fin1.close();
 		}
-		for (int i=0 ; ; i++){
+		for (int i=0 ; ; i++){																		//Alotting Intitial Rating
 			srand(time(NULL));
 	        Rating = rand()%5;
 	        if (Rating > 2 && Rating < 5){
@@ -266,40 +265,39 @@ void PrintTitle(){                                                              
 			}
 		}
     };
-     void User :: GariKro_Now(){                                                                   //GariKro now function
+     void User :: GariKro_Now(){                                                   
         time_t system_time = time(NULL);
-	    struct tm *Time_Components = localtime (&system_time);                            //Breaking time into its components
-		Booking_Date = Time_Components->tm_mday;                                          //Getting date
-	    Booking_Month = Time_Components->tm_mon;                                   		  //Getting month
-	    Booking_Year = Time_Components->tm_year;                                          //Getting year
-	    Booking_Hours = Time_Components ->tm_hour;                                        //Getting hours
-	    Booking_Minutes = Time_Components ->tm_min;                                       //Getting minutes
-	    Booking_Year += 1900;
-	    Booking_Month += 1;
+	    struct tm *Time_Components = localtime (&system_time);                     					//Breaking time into its components
+		Booking_Date = Time_Components->tm_mday;                                          			//Getting date
+	    Booking_Month = Time_Components->tm_mon;                                   		  			//Getting month
+	    Booking_Year = Time_Components->tm_year;                                          			//Getting year
+	    Booking_Hours = Time_Components ->tm_hour;                                        			//Getting hours
+	    Booking_Minutes = Time_Components ->tm_min;                                       			//Getting minutes
+	    Booking_Year += 1900;  																		//Adding 1900 because tm_year starts from 1900
+	    Booking_Month += 1;  																		//Adding 1 because tm_mon starts from 0
     };
      void User :: GariSchedule_Dates(){
         int Option = 0;
         int next_date;
         time_t system_time = time(NULL);
-        struct tm *Time_Components = localtime (&system_time);                             //Breaking date into its components
-        int date = Time_Components->tm_mday;                                               //Getting date
-        int Hours = Time_Components ->tm_hour; 											   //Getting hours
-        Booking_Month = Time_Components->tm_mon;                                           //Getting month
-        Booking_Year = Time_Components->tm_year;                                           //Getting year
-        //Adding 1900 because tm_year starts from 1900
-		Booking_Year = 1900 + Booking_Year;  
-		Booking_Month += 1;                            	 
+        struct tm *Time_Components = localtime (&system_time);                          			//Breaking date into its components
+        int date = Time_Components->tm_mday;                                               			//Getting date
+        int Hours = Time_Components ->tm_hour; 											   			//Getting hours
+        Booking_Month = Time_Components->tm_mon;                                           			//Getting month
+        Booking_Year = Time_Components->tm_year;                                           			//Getting year        
+		Booking_Year = 1900 + Booking_Year;  														//Adding 1900 because tm_year starts from 1900
+		Booking_Month += 1;  																		//Adding 1 because tm_mon starts from 0                            	 
         cout << "\nSelect date: ";
-        if (Hours < 16 ){
-            cout << "\n1." << date << " " << Booking_Month << " " << Booking_Year;
+        if (Hours < 16 ){																			//If Time Before 4:00 PM
+            cout << "\n\n1." << date << " " << Booking_Month << " " << Booking_Year;
             next_date = date + 1;
-            cout << "\n2." << next_date << " " << Booking_Month << " " << Booking_Year << endl;
+            cout << "\n\n2." << next_date << " " << Booking_Month << " " << Booking_Year << endl;
         }
-        else if (Hours >= 16){
+        else if (Hours >= 16){																		//If Time 4:00 PM or After
             date = date + 1;
             next_date = date + 1;
-            cout << "\n1." << date << " " << Booking_Month << " " << Booking_Year;
-            cout << "\n2." << next_date << " " << Booking_Month << " " << Booking_Year << endl;
+            cout << "\n\n1." << date << " " << Booking_Month << " " << Booking_Year;
+            cout << "\n\n2." << next_date << " " << Booking_Month << " " << Booking_Year << endl;
         }
         cin >> Option;
         switch (Option){
@@ -314,18 +312,18 @@ void PrintTitle(){                                                              
      void User :: GariSchedule_Time(){
         int Option = 0 ;
         time_t system_time = time(NULL);
-        struct tm *Time_Components = localtime (&system_time);                            //Breaking time into its components
-        int Hours = Time_Components ->tm_hour;                                            //Getting hours
-        Booking_Minutes = Time_Components->tm_min;                                        //Getting minutes
-        int date = Time_Components->tm_mday;
-        cout << "\nChose your time slot: ";
-        if (date == Booking_Date){
-            if (Hours < 12 || Hours > 17){
-                cout << "\n1.12:00-1:00";
-                cout << "\n2.1:00-2:00";
-                cout << "\n3.2:00-3:00";
-                cout << "\n4.3:00-4:00";
-                cout << "\n5.4:00-5:00" << endl;
+        struct tm *Time_Components = localtime (&system_time);                            			//Breaking time into its components
+        int Hours = Time_Components ->tm_hour;                                            			//Getting hours
+        Booking_Minutes = Time_Components->tm_min;                                        			//Getting minutes
+        int date = Time_Components->tm_mday;														//Getting date
+        cout << "\n\nChose your time slot: ";
+        if (date == Booking_Date){																	//If same date
+            if (Hours < 12 || Hours > 17){															//Time before 12:00 and after 5:00 PM
+                cout << "\n\n1.12:00-1:00";
+                cout << "\n\n2.1:00-2:00";
+                cout << "\n\n3.2:00-3:00";
+                cout << "\n\n4.3:00-4:00";
+                cout << "\n\n5.4:00-5:00" << endl;
                 cin >> Option;
                 switch (Option){
                     case 1:
@@ -345,11 +343,11 @@ void PrintTitle(){                                                              
                         break;
                 }
             }
-            else if ((Hours >= 12) && (Hours < 13)){
-                cout << "\n1.1:00-2:00";
-                cout << "\n2.2:00-3:00";
-                cout << "\n3.3:00-4:00";
-                cout << "\n4.4:00-5:00" << endl;
+            else if ((Hours >= 12) && (Hours < 13)){													//Time between 12:00 - 1:00 PM
+                cout << "\n\n1.1:00-2:00";
+                cout << "\n\n2.2:00-3:00";
+                cout << "\n\n3.3:00-4:00";
+                cout << "\n\n4.4:00-5:00" << endl;
                 cin >> Option;
                 switch (Option){
                     case 1:
@@ -366,10 +364,10 @@ void PrintTitle(){                                                              
                         break;
                 }
             }
-            else if ((Hours >= 13) && (Hours < 14)){
-                cout << "\n1.2:00-3:00";
-                cout << "\n2.3:00-4:00";
-                cout << "\n3.4:00-5:00" << endl;
+            else if ((Hours >= 13) && (Hours < 14)){													//Time between 1:00 - 2:00 PM
+                cout << "\n\n1.2:00-3:00";
+                cout << "\n\n2.3:00-4:00";
+                cout << "\n\n3.4:00-5:00" << endl;
                 cin >> Option;
                 switch (Option){
                     case 1:
@@ -383,9 +381,9 @@ void PrintTitle(){                                                              
                         break;
                 }
             }
-            else if ((Hours >= 14) && (Hours < 15)){
-                cout << "\n1.3:00-4:00";
-                cout << "\n2.4:00-5:00" << endl;
+            else if ((Hours >= 14) && (Hours < 15)){													//Time between 2:00 - 3:00 PM
+                cout << "\n\n1.3:00-4:00";
+                cout << "\n\n2.4:00-5:00" << endl;
                 cin >> Option;
                 switch (Option){
                     case 1:
@@ -396,8 +394,8 @@ void PrintTitle(){                                                              
                         break;
                 }
             }
-            else if ((Hours >= 15) && (Hours < 16)){
-                cout << "\n1.4:00-5:00" << endl;
+            else if ((Hours >= 15) && (Hours < 16)){													//Time between 3:00 - 4:00 PM
+                cout << "\n\n1.4:00-5:00" << endl;
                 cin >> Option;
                 switch (Option){
                     case 1:
@@ -406,12 +404,12 @@ void PrintTitle(){                                                              
                 }
             }
         }
-        else if (date != Booking_Date){
-            cout << "\n1.12:00-1:00";
-            cout << "\n2.1:00-2:00";
-            cout << "\n3.2:00-3:00";
-            cout << "\n4.3:00-4:00";
-            cout << "\n5.4:00-5:00" << endl;
+        else if (date != Booking_Date){																	//if scheduled date not same as today's date
+            cout << "\n\n1.12:00-1:00";
+            cout << "\n\n2.1:00-2:00";
+            cout << "\n\n3.2:00-3:00";
+            cout << "\n\n4.3:00-4:00";
+            cout << "\n\n5.4:00-5:00" << endl;
             cin >> Option;
             switch (Option){
                 case 1:
@@ -456,39 +454,33 @@ void PrintTitle(){                                                              
     	string tempUsername , tempPassword;
     	srand (time(NULL));
 		TransactionID=rand()%141400;
-    	//For Printing Transaction History
     	time_t system_time = time(NULL);
-        struct tm *Time_Components = localtime (&system_time);                             //Breaking date into its components
-         Booking_Date = Time_Components->tm_mday;                                               //Getting date			
-        Booking_Month = Time_Components->tm_mon;                                           //Getting month
-        Booking_Year = Time_Components->tm_year;                                           //Getting year
-        //Adding 1900 because tm_year starts from 1900
-		Booking_Year = 1900 + Booking_Year;  
-		Booking_Month += 1;       
-		//For Printing Transaction History
-    	cout << "\nChoose Payment Method:";
+        struct tm *Time_Components = localtime (&system_time);                             				//Breaking time into its components
+        Booking_Date = Time_Components->tm_mday;                                               			//Getting date			
+        Booking_Month = Time_Components->tm_mon;                                           				//Getting month
+        Booking_Year = Time_Components->tm_year;                                           				//Getting year
+		Booking_Year = 1900 + Booking_Year;          													//Adding 1900 because tm_year starts from 1900
+		Booking_Month += 1;        																		//Adding 1 because tm_mon starts from 0       
+    	cout << "\n\nChoose Payment Method:";
     	cout << "\n\n1.Visa Card \n\n2.Master Card ";
     	cin >> tempOption;
-    	cout << "\nEnter Credit Card Number: ";
+    	cout << "\n\nEnter Credit Card Number: ";
 		for(int i=0 ; i<16 ; i++){
 			cin >> CardNumber[i];
 		}
-		cout << "\nEnter Expiry Date: (MM/YY) " << endl;
+		cout << "\n\nEnter Expiry Date: (MM/YY) " << endl;
 		cin >> Exp_Month >> Exp_Year;
-		cout << "\nEnter CVN: ";
+		cout << "\n\nEnter CVN: ";
 		for(int i=0 ; i<3 ; i++){
 			cin >> CVN[i];
 		}
-		cout << "\nEnter Amount To Deposit: ";
+		cout << "\n\nEnter Amount To Deposit: ";
 		cin >> Deposit;
-		//For Transaction History
-		ofstream fout("Transactions.txt",ios::app);
+		ofstream fout("Transactions.txt",ios::app);														//Keeping Transaction History
 		if (fout.is_open()){
-			fout << Username <<" " << Password <<" "<< Deposit<<" " << Booking_Date<<" " << Booking_Month <<" "<<Booking_Year<< " "<< TransactionID<<endl;
+			fout << Username << " " << Password <<" " << Deposit << " " << Booking_Date << " " << Booking_Month << " " 
+			<< Booking_Year << " " << TransactionID << endl;
 		}
-		//For Transaction History//
-		
-		
 		fstream fin("SignupFile.txt",ios::in);
 		fstream temp("temp.txt",ios::out);
 		if (fin.is_open()){
@@ -513,21 +505,21 @@ void PrintTitle(){                                                              
 		temp.close();
 		remove("SignupFile.txt");
 		rename ("temp.txt" , "SignupFile.txt");
-		cout<<"\nTRANSACTION ID : "<<TransactionID<<endl;
-		cout << "\n\nCongratulation! Your Transaction Has Been Made." << endl;
-		
+		cout << "\n\nTRANSACTION ID : "<< TransactionID << endl;
+		cout << "\n\nCongratulation! Your Transaction Has Been Made." << endl;	
 	};
 	void User :: Notifications(){
 		string Promo[5];
 		string PromoCode;
 		int i=0 , temp = 0;
 		int Discount;
-		time_t system_time = time(NULL);
-        struct tm *Time_Components = localtime (&system_time); 
-        int Date = Time_Components->tm_mday;												//Getting date
-		int Month = Time_Components->tm_mon;                                            	//Getting month
-        int Year = Time_Components->tm_year;                                            	//Getting year
+		time_t system_time = time(NULL);																//Fetching System Time
+        struct tm *Time_Components = localtime (&system_time); 											//Breaking time into its components	
+        int Date = Time_Components->tm_mday;															//Getting date
+		int Month = Time_Components->tm_mon;                                            				//Getting month
+        int Year = Time_Components->tm_year;                                            				//Getting year
         Year = 1900 + Year;
+        Month = Month + 1;
 		if ((Rating >= 4.5) && (Rating<=5.0)){
 			fstream fin("PromoCodes.txt",ios::in);
 			if (fin.is_open()){
@@ -554,7 +546,6 @@ void PrintTitle(){                                                              
 			cout << "\n\n\t\tNo New Notifications." << endl;
 		}	
 	};
-	//User changing Info Details.
 	void User :: changePhone(){
 		system("cls");
 		string tempUsername;
@@ -705,17 +696,13 @@ void PrintTitle(){                                                              
 		int tempID,amountDeposited,flag;
 		string tempUser,tempPassword;
 		cout<<"\t\t\tUSER TRANSACTION HISTORY"<<endl<<endl;
-		cout<<"Enter your Transaction ID"<<endl;
-		cin>>tempID;
 		ifstream fin("Transactions.txt");
 		if (fin.is_open()){
 			while(fin >> tempUser  >>  tempPassword >>  amountDeposited  >>  Booking_Date >>  Booking_Month >>Booking_Year  >> TransactionID){
-				if((tempID==TransactionID) && (tempUser==Username) && (tempPassword==Password) ){
+				if( (tempUser==Username) && (tempPassword==Password) ){
 				flag++;
 				cout<<"\t\t-------------------------------------------"<<endl;
 				cout <<"\t\tUsername : " << Username <<endl;
-				cout<<"\t\t-------------------------------------------"<<endl;
-				cout <<"\t\tPassword : " << Password <<endl;
 				cout<<"\t\t-------------------------------------------"<<endl;
 				cout <<"\t\tAmount Deposited : " << amountDeposited <<endl;
 				cout<<"\t\t-------------------------------------------"<<endl;
@@ -724,16 +711,14 @@ void PrintTitle(){                                                              
 				cout <<"\t\tTransaction ID : "<<TransactionID<<endl; 
 				cout<<"\t\t-------------------------------------------"<<endl<<endl;
 				}
-			
 			}
 			if(flag==0){
-				cout<<"No Transactions"<<endl;
+				cout<<"\nNo Transactions"<<endl;
 			}
 		}
 	};
-																			//RIDE CLASS
-																			
- 	Ride :: Ride(){
+																													
+ 	Ride :: Ride(){																							//RIDE CLASS	
 		Wallet = 0;
 		Fare = 0;
 		Distance = 0;
@@ -741,11 +726,10 @@ void PrintTitle(){                                                              
 		RideOption = 0;
 		Payment_Option = 0;
 	};
-	int  Ride :: Filing_1(ifstream &carfin,ofstream &temp){
+	int Ride :: Filing_1(ifstream &carfin,ofstream &temp){
 		int len,flag=0;
-		try{
+		try{																								//Exception Handling Used
 			if (carfin.is_open()){
-            // Exception handling here.
 	            while (carfin >> Driver_FirstName >> Driver_LastName >> Driver_PhoneNumber >> VehicleCompany >> VehicleName >> 
 				numberPlate >> PickUp >> DropOff >> Status){
 	                if ((PickUp == pickup_location) && (DropOff == dropoff_location) && (Status == "Vacant")){
@@ -769,11 +753,11 @@ void PrintTitle(){                                                              
 	               temp << Driver_FirstName << " " << Driver_LastName << " " << Driver_PhoneNumber << " " << VehicleCompany 
 	               << " " << VehicleName << " " << numberPlate << " " <<  PickUp << " " << DropOff << " " << Status << endl;
 	            }        	
-	        }										//We need an else case also if car not vacant
+	        }										
 	        temp.close();
 	        carfin.close();
 	        if (flag==0){
-	        		throw('a');
+	        	throw('a');
 			}
 	        return 0;
 		}
@@ -797,7 +781,7 @@ void PrintTitle(){                                                              
                 rename("temp.txt", "Gari without AC.txt");
                 break;
             }   
-            case 2: {                                                                               //GARI WITH AC
+            case 2: {                                                                               		//GARI WITH AC
                 ifstream carfin("Gari with AC.txt");
                 ofstream temp("temp.txt");
                 count = Filing_1(carfin,temp);
@@ -805,7 +789,7 @@ void PrintTitle(){                                                              
                 rename("temp.txt", "Gari with AC.txt");
                 break;           
             }
-           case 3: {                                                                                     //GARI SHARING
+           case 3: {                                                                                     	//GARI SHARING
                 string Location1 , Location2 , Location3;
                 try{
                 	fstream carfin("Gari Sharing.txt", ios::in);
@@ -864,7 +848,7 @@ void PrintTitle(){                                                              
 				}
                 break;           
             }                                                                                       
-           case 4:{                                                                                     //RIKSHAW
+           case 4:{                                                                                     	//RIKSHAW
                 ifstream carfin("Rickshaws.txt");
                 ofstream temp("temp.txt");
                 count = Filing_1(carfin,temp);
@@ -872,7 +856,7 @@ void PrintTitle(){                                                              
                 rename("temp.txt", "Rickshaws.txt");
                 break;                                                                                
            }
-           case 5: {                                                                                         //BIKE
+           case 5: {                                                                                        //BIKE
                 ifstream carfin("Bikes.txt");
                 ofstream temp("temp.txt");
                 count = Filing_1(carfin,temp);
@@ -913,7 +897,7 @@ void PrintTitle(){                                                              
 	};
     void Ride :: Changing_Status(){
 		switch(RideOption){
-            case 1: {                                                                                  //GARI WITHOUT AC
+            case 1: {                                                                                  		//GARI WITHOUT AC
                 fstream carfin("Gari without AC.txt", ios::in);
                 Filing_3(carfin);
                 carfin.close();
@@ -921,7 +905,7 @@ void PrintTitle(){                                                              
                 rename("temp.txt", "Gari without AC.txt");
                 break;
             }   
-            case 2: {                                                                                 //GARI WITH AC
+            case 2: {                                                                                 		//GARI WITH AC
                 fstream carfin("Gari with AC.txt", ios::in);
                 Filing_3(carfin);
                 carfin.close();
@@ -929,7 +913,7 @@ void PrintTitle(){                                                              
                 rename("temp.txt", "Gari with AC.txt");
                 break;           
             }
-           case 3: {                                                                             	  //GARI SHARING
+           case 3: {                                                                             	 		//GARI SHARING
                 string Location1 , Location2 , Location3;
                 fstream carfin("Gari Sharing.txt", ios::in);
                 fstream temp("temp.txt", ios::out);
@@ -966,7 +950,7 @@ void PrintTitle(){                                                              
                 rename("temp.txt", "Gari Sharing.txt");
                 break;   
            }
-           case 4:{                                                                                 //RIKSHAW
+           case 4:{                                                                                 		//RIKSHAW
                 fstream carfin("Rickshaws.txt", ios::in);
                	fstream temp("temp.txt", ios::out);
                	Filing_3(carfin);
@@ -993,15 +977,15 @@ void PrintTitle(){                                                              
 		int Option , flag = 0;
 		float Discount;
 		string entered_Promo;
-		cout << "\nDo you wish to enter any promo code?";
-		cout << "\n1.Yes \n2.No ";
+		cout << "\n\nDo you wish to enter any promo code?";
+		cout << "\n\n1.Yes \n\n2.No ";
 		cin >> Option;
 		switch(Option){
 			case 1:{
 				cout << "\nEnter Promo Code: ";
 				cin >> entered_Promo;
-				fstream fin("PromoCodes.csv",ios::in);
-				if (fin.is_open()){
+				fstream fin("PromoCodes.csv",ios::in);														//Using CSV(Excel) File
+				if (fin.is_open()){	
 					while (!fin.eof()){
 						getline(fin,line);
 						stringstream s(line);
@@ -1026,15 +1010,10 @@ void PrintTitle(){                                                              
 				}
 				fin.close();
 				if ((Type == 1) && (Promo_Type == "NAC")){
-					Promo_Discount = Discount +0.00;
-					cout << "Discount "<<Promo_Discount<<endl;
-					system("pause");
+					Promo_Discount = Discount + 0.00;
 				}
 				else if ((Type == 2) && (Promo_Type == "AC")){
-				
 					Promo_Discount = Discount;
-					cout << "Discount "<<Promo_Discount<<endl;
-					system("pause");
 				}
 				else if ((Type == 3) && (Promo_Type == "Sharing")){
 					Promo_Discount = Discount;
@@ -1078,7 +1057,8 @@ void PrintTitle(){                                                              
  		}
  		cout<<"\nRIDE BOOKED! (SYSTEM NOTIFICATION ) "<<endl;	
 	 };
-	 void Ride :: ArrivalMessage(){ 				                                	//Displays Arrival Message to System and User
+	 
+	void Ride :: ArrivalMessage(){ 				                                	
 	 	int len;
 	 	cout << "\n\nDATE: " << Booking_Date << "-" << Booking_Month << "-" << Booking_Year;
 	 	if (Booking_Minutes > 9){
@@ -1094,41 +1074,41 @@ void PrintTitle(){                                                              
 		 	putchar(str2[i]);
 		 	Sleep(50);
 	 	}
-	 	cout<<"\nARRIVED! < SYSTEM NOTIFIED > "<<endl;                   						//Writing into file
+	 	cout<<"\nARRIVED! < SYSTEM NOTIFIED > "<<endl;                   						
 	 	for(int i = 0 ; i < len ; i++){  			
 	 		putchar(str2[i]);
-	 		Sleep(50); 					                                //Creating Delay on screen to make it look more real
+	 		Sleep(50); 					                                
 	 	}
 	 	srand (time(NULL));
         Waiting_Time = rand()%10;	
 	};
+	
     void Ride :: StartingMessage(){
     	int len,len1;
 	 	char str2[]={"......................................."};
 	 	char str3[]={"R I D E I N P R O G R E S S"};
 	    len = strlen(str2);
 	    len1=strlen(str3);
-       	//Ride has started message
          cout<<"\nRIDE HAS STARTED"<<endl;
 		 cout<<"\t\t\t";
 		for(int i = 0 ; i < len1 ; i++){  			
 		 	putchar(str3[i]);
-		 	Sleep(50); 					                                  //Creating Delay on screen to make it look more real
+		 	Sleep(50); 					                                  
 		}
 		 cout<<"\n";
 		 for(int i = 0 ; i < len ; i++){  			
 		 	putchar(str2[i]);
-		 	Sleep(50); 					                                  //Creating Delay on screen to make it look more real
-		 }
-        //Calculating Starting Time 
-        Starting_Hour = Booking_Hours;
+		 	Sleep(50); 					                                 
+		 }        
+        Starting_Hour = Booking_Hours;																//Calculating Starting Time 
         Starting_Minute = Booking_Minutes + Waiting_Time;
         if (Starting_Minute > 60){
             Starting_Hour = Starting_Hour + 1;
             Starting_Minute = Starting_Minute - 60;
         }
-    }  ;
-    void Ride :: DropOffMessage(){ 								                       //Displays DropOff Message to System and User
+    };
+    
+    void Ride :: DropOffMessage(){ 								                     
 		string tempPickup , tempDropoff;
 		float tempDistance;
 		int tempExpected;
@@ -1142,18 +1122,18 @@ void PrintTitle(){                                                              
 	 	cout<<"\t\t\t\n";
 	 	for(int i = 0 ; i < len1 ; i++){  			
              putchar(str3[i]);
-             Sleep(50);										            //Creating Delay on screen to make it look more real
+             Sleep(50);										            
 	 	}
 	 	cout<<"\n";
 	 	for(int i = 0 ; i < len ; i++){  			
              putchar(str2[i]);
-             Sleep(50);										             //Creating Delay on screen to make it look more real
+             Sleep(50);										             
 	 	}
  		cout<<"\nDriver : Customer's Dropped < SYSTEM NOTIFIED > "<<endl; 
  		cout<<"\n";
  		for(int i = 0 ; i < len ; i++){  			
  		    putchar(str2[i]);
- 		    Sleep(50);										             //Creating Delay on screen to make it look more real
+ 		    Sleep(50);										            
  		}
  		fstream fin("Location-Distances.txt",ios::in);
  		if (fin.is_open()) {
@@ -1164,9 +1144,8 @@ void PrintTitle(){                                                              
 			}
 		}
 		fin.close();
-        srand (time(NULL));
+        srand (time(NULL));																				//Calculating Ending Time
         Ending_Hour = Starting_Hour;
-        //ADD IF CONDITIONS HERE FOR EXPECTED TIME
         Ending_Minute = Starting_Minute + rand()%(tempExpected) + 4;    
         if (Ending_Minute > 60){
             Ending_Hour = Ending_Hour + 1;
@@ -1175,10 +1154,11 @@ void PrintTitle(){                                                              
 	} ;	
 	
 	void Ride :: Payment_Method(){
-		try {
-			cout << "\nChoose any of the following Payment Method: ";
-			cout << "\n1.Cash \n2.Wallet" << endl;
+		try {																							//Exception Handling used
+			cout << "\n\nChoose any of the following Payment Method: ";
+			cout << "\n\n1.Cash \n\n2.Wallet ";
 			cin >> Payment_Option;
+			cout << endl;
 			if (Payment_Option != 1 && Payment_Option !=2){
 				throw('a');
 			}
@@ -1186,8 +1166,8 @@ void PrintTitle(){                                                              
 		catch(...){
 			cout << "\nInvalid value entered." << endl;
 			try{
-				cout << "\nChoose any of the following Payment Method: ";
-				cout << "\n1.Cash \n2.Wallet" << endl;
+				cout << "\n\nChoose any of the following Payment Method: ";
+				cout << "\n\n1.Cash \n\n2.Wallet" << endl;
 				cin >> Payment_Option;
 				if (Payment_Option != 1 && Payment_Option !=2){
 					throw('a');
@@ -1233,9 +1213,8 @@ void PrintTitle(){                                                              
 			rename ("temp.txt","SignupFile.txt");
 		}
 	};
-																		//Driver Class
-	
-	 Driver::Driver(){
+																		
+	Driver::Driver(){																					//DRIVER CLASS
 		Wallet = 0;
 		Fare = 0;
 		Distance = 0;
@@ -1243,7 +1222,7 @@ void PrintTitle(){                                                              
 		RideOption = 0;
 		Payment_Option = 0;
 	};
-	void Driver:: Login(){                                   												//Login Function
+	void Driver:: Login(){                                   											
 		int flag=0;
 		string entered_username;
 		string entered_password;
@@ -1272,7 +1251,7 @@ void PrintTitle(){                                                              
 			fin.close();
 		}
 	};
-	void Driver:: SignUp(){                                                                        //Signup function
+	void Driver:: SignUp(){                                                                      
         int Selected_Location , flag=0;
         string tempUsername,tempPhone;
         string tempFirstName , tempLastName;
@@ -1296,7 +1275,7 @@ void PrintTitle(){                                                              
 	        while(fin1 >> tempFirstName  >>  tempLastName >>  tempUsername >>  tempPassword >>  tempPhone  >>  tempCNIC >> tempCar_Type >> 
 				tempCar_Company
 			>> tempCar_Name >> tempCar_RegistrationNumber){
-	        	if(tempUsername==Username){
+	        	if(tempUsername==Username){																	//Duplication of Username
 	        		flag++;
 	        		cout<<"Username already taken!"<<endl;
 	        		break;
@@ -1318,7 +1297,7 @@ void PrintTitle(){                                                              
 	       	while(fin1 >> tempFirstName  >>  tempLastName >>  tempUsername >>  tempPassword >>  tempPhone  >>  tempCNIC >> tempCar_Type >> 
 			   tempCar_Company
 			>> tempCar_Name >> tempCar_RegistrationNumber){
-	        	if(tempPhone==Phone){
+	        	if(tempPhone==Phone){																	//Duplication of Phone number
 	        		flag++;
 	        		cout<<"\nPhone Number already taken!"<<endl;
 	        		break;
@@ -1387,17 +1366,16 @@ void PrintTitle(){                                                              
     	system("cls");
     	int Option1;
     	char str2[]={"............................................"};
-		char str3[]={"S E A R C H I N G  F O R  R I D E S"};
-		
+		char str3[]={"S E A R C H I N G  F O R  R I D E S"};		
 		cout<<"\n\t\t\t";
 		for(int i = 0 ; i < strlen(str3) ; i++){  			
 		 	putchar(str3[i]);
-		 	Sleep(50); 					                                            //Creating Delay on screen to make it look more real
+		 	Sleep(50); 					                                            
 		}
 		cout<<"\n\t\t";
 		for(int i = 0 ; i < strlen(str2); i++){  			
 		 	putchar(str2[i]);
-		 	Sleep(50); 					                                            //Creating Delay on screen to make it look more real
+		 	Sleep(50); 					                                            
 		}	
 	};
 	void Driver:: ArrivalMessage(){
@@ -1414,7 +1392,7 @@ void PrintTitle(){                                                              
 		cout << "\n\t\t\t\t";
 		for(int i = 0 ; i < strlen(str5) ; i++){  			
 		 	putchar(str5[i]);
-		 	Sleep(50); 					                                            //Creating Delay on screen to make it look more real
+		 	Sleep(50); 					                                            
 		}
 		Starting_Hour = Booking_Hours;
         Starting_Minute = Booking_Minutes + Waiting_Time;
@@ -1430,7 +1408,7 @@ void PrintTitle(){                                                              
 		cout << "\n\t\t\t\t";
 		for(int i = 0 ; i < strlen(str6) ; i++){  			
 		 	putchar(str6[i]);
-		 	Sleep(50); 					                                            //Creating Delay on screen to make it look more real
+		 	Sleep(50); 					                                            
 		}
 		srand (time(NULL));
         Ending_Hour = Starting_Hour;
@@ -1444,7 +1422,7 @@ void PrintTitle(){                                                              
 	int Driver:: Filing_2(ifstream &fin){
 		//0=FirstName 1=LastName 2=Phone 3=CarCompany 4=CarName 5=CarRegistration 6=Pickup 7=Dropoff
 		//8=Status 9=Location1 10=Location2 11=Location3
-		string *temporary = new string[15];	
+		string *temporary = new string[15];															//Use of Dyanamic memory
 		string searchPickup;
 		string searchDropoff;
 		int tempPassengers;
@@ -1464,7 +1442,7 @@ void PrintTitle(){                                                              
 								cout<<"\n\t\t\t\t";
 								for(int i = 0 ; i < strlen(str4) ; i++){  			
 								 	putchar(str4[i]);
-								 	Sleep(50); 					                                            //Creating Delay on screen to make it look more real
+								 	Sleep(50); 					                                            
 								}
 								cout << "\n\nRIDE DETAILS";
 								cout << "\n------------" << endl;
@@ -1509,7 +1487,7 @@ void PrintTitle(){                                                              
 			return 0;
 		}
 		catch(int a){
-			cout << "Please choose the above given options to select or decline a ride." << endl;
+			cout << "\n\nPlease choose the above given options to select or decline a ride." << endl;
 			return 1;
 		}
 		catch(...){
@@ -1539,7 +1517,7 @@ void PrintTitle(){                                                              
 		}
 		else if(Car_Type == "Sharing"){
 			RideOption=3;
-			try{
+			try{																						//Exception Handling used
 				fstream fin("Gari Sharing.txt",ios::in);
 				if(fin.is_open()){
 					while(fin >> temporary[0] >> temporary[1] >> temporary[2] >> temporary[3] >> temporary[4] >> temporary[5] >> temporary[9] 
@@ -1558,7 +1536,7 @@ void PrintTitle(){                                                              
 										cout<<"\n\t\t\t\t";
 										for(int i = 0 ; i < strlen(str4) ; i++){  			
 										 	putchar(str4[i]);
-										 	Sleep(50); 					                                            //Creating Delay on screen to make it look more real
+										 	Sleep(50); 					                                            
 										}
 										cout << "\n\nRIDE DETAILS";
 										cout << "\n------------" << endl;
@@ -1566,7 +1544,7 @@ void PrintTitle(){                                                              
 										cout << "\nPhone: " << temporary[2] ;
 										cout << "\nPickup: " << searchPickup;
 										cout << "\nDropoff: " << searchDropoff << endl;
-										cout << "\nPress: \n1.To Accept \n2.To Decline" << endl;
+										cout << "\nPress: \n\n1.To Accept \n\n2.To Decline" << endl;
 										cin>>option;
 										if(option == 1){	
 											cout<<"\n\t\t\t\tRIDE ACCEPTED !" << endl;
@@ -1626,7 +1604,7 @@ void PrintTitle(){                                                              
 		else {
 			return 1;
 		}
-    } ;
+    };
     void Driver:: Set_Time(){
 		time_t system_time = time(NULL);
 	    struct tm *Time_Components = localtime (&system_time);                            			//Breaking time into its components
@@ -1635,14 +1613,16 @@ void PrintTitle(){                                                              
 	    Booking_Year = Time_Components->tm_year;                                          			//Getting year
 	    Booking_Hours = Time_Components ->tm_hour;                                        			//Getting hours
 	    Booking_Minutes = Time_Components ->tm_min;
+	    Booking_Year = Booking_Year + 1900;
+	    Booking_Month = Booking_Month + 1;
 	};
 	void Driver:: checkPassword() {
 		string previousPassword;
 		string currentPhone;
 		int option=0;
 		system("cls");
-		cout<<"Change Password"<<endl<<"---------------";
-		cout<<endl<<endl<<"Enter Previous Password : ";
+		cout<<"\nChange Password"<<endl<<"---------------";
+		cout<<endl<<endl<<"\n\nEnter Previous Password : ";
 		cin>>previousPassword;
 		if(previousPassword == Password){
 			changePassword();
@@ -1650,10 +1630,10 @@ void PrintTitle(){                                                              
 		else{
 			cout<<endl<<"Password Incorrect!";
 			while(1){
-				cout<<endl<<"1. Forgot Password"<<endl<<"2. ReEnter Password"<<endl<<"3. Exit";
+				cout<<endl<<"1.\nForgot Password"<<endl<<"\n2.ReEnter Password"<<endl<<"\n3. Exit";
 				cin>>option;
 				if(option == 1) {
-					cout<<"Forgot Password"<<endl<<"---------------";
+					cout<<"\nForgot Password"<<endl<<"---------------";
 					cout<<endl<<endl<<"Enter Phone Number : ";
 					cin>>currentPhone;
 					if(currentPhone == Phone) {
@@ -1682,7 +1662,7 @@ void PrintTitle(){                                                              
 		if(fin.is_open()){
 			while(fin>>FirstName>>LastName>>Username>>Password>>Phone>>CNIC>>Car_Type>>Car_Company>>Car_Name>>Car_RegistrationNumber){
 				if(currentPhone == Phone){
-					cout<<"Your Current Phone Number : "<<Phone;
+					cout<<"\nYour Current Phone Number : "<<Phone;
 					cout<<endl<<endl<<"Enter new Phone Number : ";
 					cin>>Phone;
 				}
@@ -1704,13 +1684,13 @@ void PrintTitle(){                                                              
 		srand (time(NULL));
 		Payment_Option = rand()%2;
 		Payment_Option++;
-		if (Payment_Option == 1){
-			for (int i=0 ; ; i++){
+		for (int i=0 ; ; i++){
+			if (Payment_Option == 1){
 				cout << "\nEnter Amount Recieved: ";
 					cin >> Amount_Recieved;
 					if (Amount_Recieved == Fare){
-						cout << "\nReturn Amount: 0";
-						cout << "\nCongratulation! Your Ride Has Been Completed." << endl;
+						cout << "\n\nReturn Amount: 0";
+						cout << "\n\nCongratulation! Your Ride Has Been Completed." << endl;
 						break;
 					}
 					else if (Amount_Recieved < (Fare*0.8) ){
@@ -1719,32 +1699,31 @@ void PrintTitle(){                                                              
 					else if (Amount_Recieved > (Fare*0.8) && Amount_Recieved < Fare){
 						Cash_Back = Fare - Amount_Recieved;
 						Wallet += Cash_Back;
-						cout << "\nYou Have A Negative Balance Of: " << Cash_Back;
-						cout << "\nCongratulation! Your Ride Has Been Completed." << endl;
+						cout << "\n\nYou Have A Negative Balance Of: " << Cash_Back;
+						cout << "\n\nCongratulation! Your Ride Has Been Completed." << endl;
 						break;
 					}
 					else if (Amount_Recieved > Fare){
 						Cash_Back = Amount_Recieved - Fare;
-						cout << "\nDo You Wish To Deposit The Remaining Amount In Your Wallet?";
-						cout << "\n1.Yes \n2.No" << endl;
+						cout << "\n\nDo You Wish To Deposit The Remaining Amount In Your Wallet?";
+						cout << "\n\n1.Yes \n\n2.No" << endl;
 						cin >> Option;
-						if (Option == 1){
-							
+						if (Option == 1){	
 							Wallet += Cash_Back;
-							cout << "\nCongratulation! Your Ride Has Been Completed." << endl;
+							cout << "\n\nCongratulation! Your Ride Has Been Completed." << endl;
 							break;
 						}
 						else if (Option == 2){
-							cout << "\nReturn Amount: " << Cash_Back;
-							cout << "\nCongratulation! Your Ride Has Been Completed." << endl;
+							cout << "\n\nReturn Amount: " << Cash_Back;
+							cout << "\n\nCongratulation! Your Ride Has Been Completed." << endl;
 							break;
 						}
-					}	
-				else {
-					Wallet -= Fare;
-					cout << "\nCongratulation! Your Ride Has Been Completed." << endl;
-					break;
+					}
 				}
+			else {
+				Wallet -= Fare;
+				cout << "\nCongratulation! Your Ride Has Been Completed." << endl;
+				break;
 			}
 		}		
 	};
@@ -1756,7 +1735,7 @@ void PrintTitle(){                                                              
 		while(1){
 			cout << endl << "Enter New Password : ";
 			cin >> newPassword1;
-			cout << "Confirm Password : ";
+			cout << "\nConfirm Password : ";
 			cin >> newPassword2;
 			if(newPassword1 == newPassword2){
 				fstream fin("Driver-Signup.txt",ios::in);
@@ -1829,9 +1808,8 @@ void PrintTitle(){                                                              
         fstream Ad("Admin-Charges.txt", ios::in);
         fstream temp("temp.txt", ios::out);
         switch(Option) {
-            case 1: {                                                                                //Gari without AC
-                if (Ad.is_open()) {
-                    
+            case 1: {                                                                                		//Gari without AC
+                if (Ad.is_open()) {      
                     while ( Ad >> VehicleType >> RatePer_Kilometer >> Waiting_Charges >> Extra_Charges) {
                         if ((VehicleType == "NAC")) {
                             temp << VehicleType << " " << tempRatePer_Kilometer << " " << tempWaiting_Charges 
@@ -1852,7 +1830,7 @@ void PrintTitle(){                                                              
                 rename("temp.txt", "Admin-Charges.txt");                                                                        
                 break;
             }       
-            case 2:                                                                            //Gari with AC
+            case 2:                                                                            				//Gari with AC
                if (Ad.is_open()){
                    
                     while ( Ad >> VehicleType >> RatePer_Kilometer >> Waiting_Charges >> Extra_Charges) {
@@ -1874,9 +1852,8 @@ void PrintTitle(){                                                              
                 remove("Admin-Charges.txt");
                 rename("temp.txt", "Admin-Charges.txt");                                                                        
                 break;
-             case 3:                                                                              //Gari Sharing
+             case 3:                                                                              			//Gari Sharing
                 if (Ad.is_open()){
-                    
                     while ( Ad >> VehicleType >> RatePer_Kilometer >> Waiting_Charges >> Extra_Charges) {
                         if ((VehicleType == "Sharing")) {
                             temp << VehicleType << " " << tempRatePer_Kilometer << " " << tempWaiting_Charges 
@@ -1896,9 +1873,8 @@ void PrintTitle(){                                                              
                 remove("Admin-Charges.txt");
                 rename("temp.txt", "Admin-Charges.txt");                                                                        
                 break;
-            case 4:                                                                                             //Rikshaw
+            case 4:                                                                                         //Rikshaw
                 if (Ad.is_open()){
-    
                     while ( Ad >> VehicleType >> RatePer_Kilometer >> Waiting_Charges >> Extra_Charges) {
                         if ((VehicleType == "Rikshaw")) {
                             temp << VehicleType << " " << tempRatePer_Kilometer << " " << tempWaiting_Charges 
@@ -1918,9 +1894,8 @@ void PrintTitle(){                                                              
                 remove("Admin-Charges.txt");
                 rename("temp.txt", "Admin-Charges.txt");                                                                        
                 break;
-            case 5:                                                                                             //Bike
-                if (Ad.is_open()){
-                    
+            case 5:                                                                                         //Bike
+                if (Ad.is_open()){                
                     while ( Ad >> VehicleType >> RatePer_Kilometer >> Waiting_Charges >> Extra_Charges) {
                         if ((VehicleType == "Bike")) {
                             temp << VehicleType << " " << tempRatePer_Kilometer << " " << tempWaiting_Charges 
@@ -2056,4 +2031,3 @@ void PrintTitle(){                                                              
 		fout << "\n" << promo << " " << promo_discount << " " << promo_validity << " " << promo_type;
 		fout.close();
 	};
-
